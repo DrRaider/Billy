@@ -48,7 +48,7 @@ interface EventWithTicketCollections {
   locationName: string;
   totalTicketsCount: number;
   assetUrl: string;
-  lineUp: string[];
+  lineUp: string[] | null;
   ticketCollections: {
     collectionName: string;
     scAddress: string;

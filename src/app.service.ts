@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Event, EventWithTicketCollections } from './event.interface';
 import * as dayjs from 'dayjs';
@@ -41,7 +41,7 @@ export class AppService {
     })) as unknown as Event;
 
     if (!data) {
-      throw new Error('Event not found');
+      throw new NotFoundException(`Event with id ${id} not found`);
     }
 
     const [eventWithTicketCollections] =
@@ -70,6 +70,9 @@ export class AppService {
             };
           }),
         },
+      },
+      include: {
+        ticketCollection: true,
       },
     });
   }
@@ -100,7 +103,7 @@ export class AppService {
         locationName,
         totalTicketsCount,
         assetUrl,
-        lineUp: lineup,
+        lineUp: lineup.length ? lineup : null,
         ticketCollections: ticketCollection.map((ticket) => {
           const {
             collectionName,

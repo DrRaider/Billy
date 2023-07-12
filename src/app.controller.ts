@@ -1,7 +1,9 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
+  InternalServerErrorException,
   NotFoundException,
   Param,
   Put,
@@ -10,6 +12,7 @@ import {
 import { AppService } from './app.service';
 import { EventWithTicketCollections } from './event.interface';
 import { UpdateEventDto } from './update-event.dto';
+import { Prisma } from '@prisma/client';
 
 @Controller('events')
 export class AppController {
@@ -30,7 +33,10 @@ export class AppController {
     try {
       return await this.appService.getEvent(+id);
     } catch (err) {
-      throw new NotFoundException();
+      if (err instanceof NotFoundException) {
+        throw err;
+      }
+      throw new InternalServerErrorException(err.message);
     }
   }
 
@@ -42,8 +48,15 @@ export class AppController {
     try {
       return await this.appService.updateEvent(+id, updateEventDto);
     } catch (err) {
-      console.log(err);
-      throw new NotFoundException();
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2025'
+      ) {
+        throw new NotFoundException(`Event with id ${id} not found`);
+      } else if (err instanceof Prisma.PrismaClientValidationError) {
+        throw new BadRequestException(err.message);
+      }
+      throw new InternalServerErrorException(err.message);
     }
   }
 }

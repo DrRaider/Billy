@@ -1,7 +1,7 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PrismaModule, loggingMiddleware } from 'nestjs-prisma';
+import { PrismaModule } from 'nestjs-prisma';
 
 @Module({
   imports: [
