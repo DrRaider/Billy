@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:13
+    container_name: billy-test
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=billy
+      - POSTGRES_USER=billy
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - billy-data:/var/lib/postgresql/data
+
+volumes:
+  billy-data:
+    driver: local

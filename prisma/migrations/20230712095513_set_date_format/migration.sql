@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Event" ALTER COLUMN "startDatetime" SET DATA TYPE DATE,
+ALTER COLUMN "endDatetime" SET DATA TYPE DATE,
+ALTER COLUMN "saleStartTime" SET DATA TYPE DATE;
